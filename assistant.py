@@ -31,6 +31,9 @@ class AssistantFunction(agents.llm.FunctionContext):
         ],
     ):
         print(f"Message triggering vision capabilities: {user_msg}")
+        context = AssistantContext.get_current()
+        context.store_medtadate("usermsg", user_msg)
+    
         return None
 
 
@@ -60,7 +63,7 @@ async def entrypoint(ctx: JobContext):
             ChatMessage(
                 role="system",
                 content=(
-                    "Your name is Alloy. You are a funny, witty bot. Your interface with users will be voice and vision."
+                    "Your name is lizzie. You are a funny, witty bot. Your interface with users will be voice and vision."
                     "Respond with short and concise answers. Avoid using unpronouncable punctuation or emojis."
                 ),
             )
@@ -72,7 +75,7 @@ async def entrypoint(ctx: JobContext):
     # Since OpenAI does not support streaming TTS, we'll use it with a StreamAdapter
     # to make it compatible with the VoiceAssistant
     openai_tts = tts.StreamAdapter(
-        tts=openai.TTS(voice="alloy"),
+        tts=openai.TTS(voice="lizzie"),
         sentence_tokenizer=tokenize.basic.SentenceTokenizer(),
     )
 
@@ -124,7 +127,7 @@ async def entrypoint(ctx: JobContext):
     assistant.start(ctx.room)
 
     await asyncio.sleep(1)
-    await assistant.say("Hi there! How can I help?", allow_interruptions=True)
+    await assistant.say("hello ms.jay, How can I help?", allow_interruptions=True)
 
     while ctx.room.connection_state == rtc.ConnectionState.CONN_CONNECTED:
         video_track = await get_video_track(ctx.room)
@@ -136,4 +139,4 @@ async def entrypoint(ctx: JobContext):
 
 
 if __name__ == "__main__":
-    cli.run_app(WorkerOptions(entrypoint_fnc=entrypoint))
+    cli.run_app(WorkerOptions(entrypoint_fnc=entrypoin))
